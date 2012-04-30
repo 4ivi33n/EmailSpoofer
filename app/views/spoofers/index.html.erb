@@ -1,0 +1,29 @@
+<h1>Sent mails</h1>
+
+<table cellpadding="10px" border>
+  <tr>
+    <th>From</th>
+    <th>To</th>
+    <th>Subject</th>
+    <th>Message</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @spoofers.each do |spoofer| %>
+  <tr>
+    <td><%= spoofer.from %></td>
+    <td><%= spoofer.to %></td>
+    <td><%= spoofer.subject %></td>
+    <td><%= spoofer.message[0,[spoofer.message.length,20].min] %></td>
+    <td><%= link_to 'Show', spoofer %></td>
+    <td><%= link_to 'Edit', edit_spoofer_path(spoofer) %></td>
+    <td><%= link_to 'Delete', spoofer, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'Send new mail', new_spoofer_path %>

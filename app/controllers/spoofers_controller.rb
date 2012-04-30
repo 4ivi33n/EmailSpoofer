@@ -1,0 +1,95 @@
+class SpoofersController < ApplicationController
+require 'net/smtp'
+  # GET /spoofers
+  # GET /spoofers.json
+  def index
+    @spoofers = Spoofer.all
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @spoofers }
+    end
+  end
+
+  # GET /spoofers/1
+  # GET /spoofers/1.json
+  def show
+    @spoofer = Spoofer.find(params[:id])
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @spoofer }
+    end
+  end
+
+  # GET /spoofers/new
+  # GET /spoofers/new.json
+  def new
+    @spoofer = Spoofer.new
+
+
+
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @spoofer }
+    end
+  end
+
+  # GET /spoofers/1/edit
+  def edit
+    @spoofer = Spoofer.find(params[:id])
+  end
+
+  # POST /spoofers
+  # POST /spoofers.json
+  def create
+    @spoofer = Spoofer.new(params[:spoofer])
+
+    respond_to do |format|
+      if @spoofer.save
+      msg = ''
+    msg+= "Subject: " + @spoofer.subject+"\n"
+    msg += "From: "+@spoofer.from+"\n"
+    msg += @spoofer.message
+	smtp = Net::SMTP.new 'smtp.elasticemail.com',2525
+smtp.start("xyz@xyz.com","ego.alternate@gmail.com","e8b741aa-45ff-4cda-9060-d623153d2610",:login) do
+	smtp.send_message(msg,@spoofer.from,@spoofer.to)
+	end
+        format.html { redirect_to @spoofer, notice: 'Spoofer was successfully created.' }
+        format.json { render json: @spoofer, status: :created, location: @spoofer }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @spoofer.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PUT /spoofers/1
+  # PUT /spoofers/1.json
+  def update
+    @spoofer = Spoofer.find(params[:id])
+
+    respond_to do |format|
+      if @spoofer.update_attributes(params[:spoofer])
+        format.html { redirect_to @spoofer, notice: 'Spoofer was successfully updated.' }
+        format.json { head :ok }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @spoofer.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /spoofers/1
+  # DELETE /spoofers/1.json
+  def destroy
+    @spoofer = Spoofer.find(params[:id])
+    @spoofer.destroy
+
+    respond_to do |format|
+      format.html { redirect_to spoofers_url }
+      format.json { head :ok }
+    end
+  end
+end

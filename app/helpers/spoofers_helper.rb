@@ -1,0 +1,2 @@
+module SpoofersHelper
+end
